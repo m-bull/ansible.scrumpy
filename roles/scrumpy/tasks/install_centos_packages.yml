@@ -1,0 +1,10 @@
+---
+
+- name: "Install CentOS prerequisites"
+  yum:
+    state: latest
+    name: "{{ item }}"
+  become: yes
+  with_items:
+    - epel-release
+    - python2-pip

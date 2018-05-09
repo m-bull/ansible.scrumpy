@@ -1,0 +1,6 @@
+---
+
+- include_tasks: install_centos_packages.yml
+  when: ansible_distribution == 'CentOS'
+
+- include_tasks: install_scrumpy.yml

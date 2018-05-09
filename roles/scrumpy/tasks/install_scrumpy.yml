@@ -1,0 +1,30 @@
+---
+
+- name: "Install libsbml with pip"
+  pip:
+    name: python-libsbml
+    state: latest
+  become: yes
+
+- name: "Download ScrumPY"
+  unarchive:
+    src: "{{ scrumpy_archive_url }}"
+    dest: /tmp/
+    list_files: yes
+    remote_src: yes
+  register: archive_contents
+
+- name: "Patch ScrumPY installer config"
+  replace:
+    path: "/tmp/{{ archive_contents.files[0] }}install_conf.py"
+    regexp: 'dist-packages'
+    replace: 'site-packages'
+  when: 
+    - ansible_distribution == 'CentOS'
+    - ansible_distribution_major_version == '7'
+
+- name: "Run ScrumPy installer"
+  command: "python install.py"
+  args:
+    chdir: "/tmp/{{ archive_contents.files[0] }}"
+  become: yes
